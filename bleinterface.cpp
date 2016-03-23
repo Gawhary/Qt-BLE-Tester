@@ -33,7 +33,7 @@ BLEInterface::BLEInterface(QObject *parent) : QObject(parent),
     m_service(0),
     m_readTimer(0),
     m_connected(false),
-    m_currentService(-1)
+    m_currentService(0)
 {
     m_deviceDiscoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
 
@@ -165,8 +165,10 @@ void BLEInterface::onServiceScanDone()
 {
     if(m_servicesUuid.isEmpty())
         emit statusInfoChanged("Can't find any services.", true);
-    else
+    else{
         emit statusInfoChanged("All services discovered.", true);
+        update_currentService(m_currentService);
+    }
 }
 
 
