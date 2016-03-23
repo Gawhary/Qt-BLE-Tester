@@ -140,6 +140,7 @@ void BLEInterface::onDeviceConnected()
 {
     m_servicesUuid.clear();
     m_services.clear();
+    setCurrentService(-1);
     emit servicesChanged(m_services);
     m_control->discoverServices();
 }
@@ -153,12 +154,8 @@ void BLEInterface::onDeviceDisconnected()
 
 void BLEInterface::onServiceDiscovered(const QBluetoothUuid &gatt)
 {
-//    if(gatt == m_serviceUuid){
-    m_servicesUuid.append(gatt);
-    m_services.append(gatt.toString());
-    emit servicesChanged(m_services);
+    Q_UNUSED(gatt)
     emit statusInfoChanged("Service discovered. Waiting for service scan to be done...", true);
-//        m_foundService = true;
 }
 
 void BLEInterface::onServiceScanDone()
@@ -166,8 +163,14 @@ void BLEInterface::onServiceScanDone()
     if(m_servicesUuid.isEmpty())
         emit statusInfoChanged("Can't find any services.", true);
     else{
+        m_servicesUuid = m_control->services();
+        m_services.clear();
+        foreach (auto uuid, m_servicesUuid)
+            m_services.append(uuid.toString());
+        emit servicesChanged(m_services);
+        m_currentService = -1;// to force call update_currentService(once)
+        setCurrentService(0);
         emit statusInfoChanged("All services discovered.", true);
-        update_currentService(m_currentService);
     }
 }
 
@@ -218,7 +221,7 @@ void BLEInterface::update_currentService(int indx)
 
     if (indx > 0 && m_servicesUuid.count() > indx) {
         m_service = m_control->createServiceObject(
-                    m_servicesUuid[indx], this);
+                    m_servicesUuid.at(indx), this);
     }
 
     if (!m_service) {
