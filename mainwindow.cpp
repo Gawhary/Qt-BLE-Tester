@@ -10,6 +10,16 @@ MainWindow::MainWindow(QWidget *parent) :
     m_bleInterface->scanDevices();
     connect(m_bleInterface, &BLEInterface::dataReceived,
             this, &MainWindow::dataReceived);
+    connect(m_bleInterface, &BLEInterface::devicesNamesChanged,
+            [this] (QStringList devices){
+        ui->devicesComboBox->clear();
+        ui->devicesComboBox->addItems(devices);
+    });
+    connect(m_bleInterface, &BLEInterface::servicesChanged,
+            [this] (QStringList services){
+        ui->servicesComboBox->clear();
+        ui->servicesComboBox->addItems(services);
+    });
 }
 
 MainWindow::~MainWindow()
