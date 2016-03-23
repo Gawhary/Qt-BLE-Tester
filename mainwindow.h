@@ -20,9 +20,9 @@ private slots:
 
     void on_connectButton_clicked();
 
-    void on_comboBox_currentIndexChanged(int index);
-
     void on_sendButton_clicked();
+
+    void on_servicesComboBox_currentIndexChanged(int index);
 
 private:
     Ui::MainWindow *ui;

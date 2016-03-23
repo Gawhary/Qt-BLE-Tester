@@ -139,6 +139,8 @@ void BLEInterface::connectCurrentDevice()
 void BLEInterface::onDeviceConnected()
 {
     m_servicesUuid.clear();
+    m_services.clear();
+    emit servicesChanged(m_services);
     m_control->discoverServices();
 }
 
@@ -153,6 +155,8 @@ void BLEInterface::onServiceDiscovered(const QBluetoothUuid &gatt)
 {
 //    if(gatt == m_serviceUuid){
     m_servicesUuid.append(gatt);
+    m_services.append(gatt.toString());
+    emit servicesChanged(m_services);
     emit statusInfoChanged("Service discovered. Waiting for service scan to be done...", true);
 //        m_foundService = true;
 }

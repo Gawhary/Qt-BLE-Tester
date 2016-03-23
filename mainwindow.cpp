@@ -43,10 +43,6 @@ void MainWindow::on_connectButton_clicked()
     m_bleInterface->connectCurrentDevice();
 }
 
-void MainWindow::on_comboBox_currentIndexChanged(int index)
-{
-    m_bleInterface->setCurrentService(index);
-}
 
 void MainWindow::on_sendButton_clicked()
 {
@@ -66,4 +62,9 @@ void MainWindow::dataReceived(QByteArray data){
     else{
         ui->receivedTextEdit->append(data.toHex());
     }
+}
+
+void MainWindow::on_servicesComboBox_currentIndexChanged(int index)
+{
+    m_bleInterface->setCurrentService(index);
 }
