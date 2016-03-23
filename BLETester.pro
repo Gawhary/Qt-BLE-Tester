@@ -21,3 +21,6 @@ HEADERS  += mainwindow.h \
     lib-qt-qml-tricks/src/qqmlhelpers.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    resources.qrc

@@ -42,6 +42,7 @@ void MainWindow::on_sendButton_clicked()
     else
         data = QByteArray::fromHex(ui->lineEdit->text().toLatin1());
     m_bleInterface->write(data);
+    ui->lineEdit->clear();
 }
 void MainWindow::dataReceived(QByteArray data){
     if(ui->asciiRadioButton->isChecked()){

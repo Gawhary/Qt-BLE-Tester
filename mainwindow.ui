@@ -39,8 +39,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset>
-          <normaloff>refresh.png</normaloff>refresh.png</iconset>
+         <iconset resource="resources.qrc">
+          <normaloff>:/refresh.png</normaloff>:/refresh.png</iconset>
         </property>
        </widget>
       </item>
@@ -88,6 +88,9 @@
         <property name="text">
          <string>ASCII</string>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
         <attribute name="buttonGroup">
          <string notr="true">buttonGroup</string>
         </attribute>
@@ -109,6 +112,13 @@
      <widget class="QTextEdit" name="receivedTextEdit">
       <property name="readOnly">
        <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>Clear</string>
       </property>
      </widget>
     </item>
@@ -135,8 +145,27 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
- <connections/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>receivedTextEdit</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>241</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>185</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <buttongroups>
   <buttongroup name="buttonGroup"/>
  </buttongroups>
