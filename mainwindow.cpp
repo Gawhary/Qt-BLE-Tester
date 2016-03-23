@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include <QStatusBar>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -19,6 +19,10 @@ MainWindow::MainWindow(QWidget *parent) :
             [this] (QStringList services){
         ui->servicesComboBox->clear();
         ui->servicesComboBox->addItems(services);
+    });
+    connect(m_bleInterface, &BLEInterface::statusInfoChanged,
+            [this](QString info, bool){
+        this->statusBar()->showMessage(info);
     });
 }
 
