@@ -75,7 +75,7 @@ void BLEInterface::write(const QByteArray &data)
             emit this->statusInfoChanged("Too large data to send.", false);
             qDebug() << "Too large data to send.";
         }
-        m_service->writeCharacteristic(m_writeCharacteristic, data, m_writeMode;);
+        m_service->writeCharacteristic(m_writeCharacteristic, data, m_writeMode);
     }
 }
 
