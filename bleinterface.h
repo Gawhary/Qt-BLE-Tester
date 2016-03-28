@@ -121,6 +121,7 @@ private:
     bool m_connected;
     void searchCharacteristic();
     int m_currentService;
+    QLowEnergyService::WriteMode m_writeMode;
 };
 
 #endif // BLEINTERFACE_H
