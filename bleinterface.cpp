@@ -91,7 +91,7 @@ void BLEInterface::write(const QByteArray &data)
             if(m_writeMode == QLowEnergyService::WriteWithResponse) {
                 // continue when chunk written
                 auto conn = new QMetaObject::Connection;
-                *conn = connect(m_service, &QLowEnergyService::descriptorWritten,
+                *conn = connect(m_service, &QLowEnergyService::characteristicWritten,
                         this, [this, data, conn](){
                     write(data.mid(CHUNK_SIZE));
                     disconnect(*conn);delete conn;
@@ -107,7 +107,7 @@ void BLEInterface::write(const QByteArray &data)
 }
 void BLEInterface::waitForWrite(){
     QEventLoop pause;
-    connect(m_service, &QLowEnergyService::descriptorWritten,
+    connect(m_service, &QLowEnergyService::characteristicWritten,
             &pause, &QEventLoop::quit);
     connect(m_service, SIGNAL(error(QLowEnergyService::ServiceError)),
             &pause, SLOT(quit()));
