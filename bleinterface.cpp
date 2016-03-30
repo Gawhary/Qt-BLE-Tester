@@ -1,5 +1,6 @@
 #include "bleinterface.h"
 #include <QDebug>
+#include <QEventLoop>
 
 DeviceInfo::DeviceInfo(const QBluetoothDeviceInfo &info):
     QObject(), m_device(info)
@@ -70,13 +71,47 @@ void BLEInterface::write(const QByteArray &data)
 {
     qDebug() << "BLEInterface::write: " << data;
     if(m_service && m_writeCharacteristic.isValid()){
-        if(data.length() > 20){
-            // ToDo: send on packet
-            emit this->statusInfoChanged("Too large data to send.", false);
+        if(data.length() > CHUNK_SIZE){
             qDebug() << "Too large data to send.";
+            // Loop
+//            int sentBytes = 0;
+//            while (sentBytes < data.length()) {
+//                m_service->writeCharacteristic(m_writeCharacteristic,
+//                                               data.mid(sentBytes, CHUNK_SIZE),
+//                                               m_writeMode);
+//                sentBytes += CHUNK_SIZE;
+//                if(m_writeMode == QLowEnergyService::WriteWithResponse){
+//                    waitForWrite();
+//                    if(m_service->error() != QLowEnergyService::NoError)
+//                        return;
+//                }
+//            }
+//            // OR Recursion
+            write(data.left(CHUNK_SIZE));
+            if(m_writeMode == QLowEnergyService::WriteWithResponse) {
+                // continue when chunk written
+                auto conn = new QMetaObject::Connection;
+                *conn = connect(m_service, &QLowEnergyService::descriptorWritten,
+                        this, [this, data, conn](){
+                    write(data.mid(CHUNK_SIZE));
+                    disconnect(*conn);delete conn;
+                });
+            }
+            else
+                write(data.mid(CHUNK_SIZE));
+
         }
-        m_service->writeCharacteristic(m_writeCharacteristic, data, m_writeMode);
+        else
+            m_service->writeCharacteristic(m_writeCharacteristic, data, m_writeMode);
     }
+}
+void BLEInterface::waitForWrite(){
+    QEventLoop pause;
+    connect(m_service, &QLowEnergyService::descriptorWritten,
+            &pause, &QEventLoop::quit);
+    connect(m_service, SIGNAL(error(QLowEnergyService::ServiceError)),
+            &pause, SLOT(quit()));
+    pause.exec();
 }
 
 void BLEInterface::addDevice(const QBluetoothDeviceInfo &device)

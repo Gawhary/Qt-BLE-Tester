@@ -6,16 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>367</width>
-    <height>287</height>
+    <width>517</width>
+    <height>436</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1,0,0">
       <item>
        <widget class="QLabel" name="label">
@@ -53,7 +53,7 @@
       </item>
      </layout>
     </item>
-    <item>
+    <item row="1" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
       <item>
        <widget class="QLabel" name="label_2">
@@ -67,21 +67,7 @@
       </item>
      </layout>
     </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
-      <item>
-       <widget class="QLineEdit" name="lineEdit"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="sendButton">
-        <property name="text">
-         <string>Send</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
+    <item row="2" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
        <widget class="QRadioButton" name="asciiRadioButton">
@@ -108,14 +94,41 @@
       </item>
      </layout>
     </item>
-    <item>
+    <item row="3" column="0">
+     <widget class="QPlainTextEdit" name="sendTextEdit"/>
+    </item>
+    <item row="4" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="sendButton">
+        <property name="text">
+         <string>Send</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="5" column="0">
      <widget class="QTextEdit" name="receivedTextEdit">
       <property name="readOnly">
        <bool>true</bool>
       </property>
      </widget>
     </item>
-    <item>
+    <item row="6" column="0">
      <widget class="QPushButton" name="pushButton">
       <property name="text">
        <string>Clear</string>
@@ -129,7 +142,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>367</width>
+     <width>517</width>
      <height>21</height>
     </rect>
    </property>

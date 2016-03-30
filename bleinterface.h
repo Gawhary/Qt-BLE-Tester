@@ -8,9 +8,11 @@
 #include <QLowEnergyService>
 #include <QTimer>
 
+
 #include "lib-qt-qml-tricks/src/qqmlhelpers.h"
 
 #define READ_INTERVAL_MS 3000
+#define CHUNK_SIZE 20
 
 class DeviceInfo: public QObject
 {
@@ -101,6 +103,7 @@ private slots:
     void update_currentService(int currentSerice);
 
 private:
+    inline void waitForWrite();
     void update_connected(bool connected){
         if(connected != m_connected){
             m_connected = connected;
