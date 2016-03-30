@@ -196,10 +196,10 @@ void BLEInterface::onServiceDiscovered(const QBluetoothUuid &gatt)
 
 void BLEInterface::onServiceScanDone()
 {
+    m_servicesUuid = m_control->services();
     if(m_servicesUuid.isEmpty())
         emit statusInfoChanged("Can't find any services.", true);
     else{
-        m_servicesUuid = m_control->services();
         m_services.clear();
         foreach (auto uuid, m_servicesUuid)
             m_services.append(uuid.toString());
@@ -255,7 +255,7 @@ void BLEInterface::update_currentService(int indx)
     delete m_service;
     m_service = 0;
 
-    if (indx > 0 && m_servicesUuid.count() > indx) {
+    if (indx >= 0 && m_servicesUuid.count() > indx) {
         m_service = m_control->createServiceObject(
                     m_servicesUuid.at(indx), this);
     }
