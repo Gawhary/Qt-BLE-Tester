@@ -72,19 +72,18 @@ void BLEInterface::write(const QByteArray &data)
     qDebug() << "BLEInterface::write: " << data;
     if(m_service && m_writeCharacteristic.isValid()){
         if(data.length() > CHUNK_SIZE){
-            qDebug() << "Too large data to send.";
-            write(data.left(CHUNK_SIZE));
-            if(m_writeMode == QLowEnergyService::WriteWithResponse) {
-                // continue when chunk written
-                auto conn = new QMetaObject::Connection;
-                *conn = connect(m_service, &QLowEnergyService::characteristicWritten,
-                        this, [this, data, conn](){
-                    write(data.mid(CHUNK_SIZE));
-                    disconnect(*conn);delete conn;
-                });
+            int sentBytes = 0;
+            while (sentBytes < data.length()) {
+                m_service->writeCharacteristic(m_writeCharacteristic,
+                                               data.mid(sentBytes, CHUNK_SIZE),
+                                               m_writeMode);
+                sentBytes += CHUNK_SIZE;
+                if(m_writeMode == QLowEnergyService::WriteWithResponse){
+                    waitForWrite();
+                    if(m_service->error() != QLowEnergyService::NoError)
+                        return;
+                }
             }
-            else
-                write(data.mid(CHUNK_SIZE));
 
         }
         else
