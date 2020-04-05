@@ -67,6 +67,13 @@ void BLEInterface::read(){
         m_service->readCharacteristic(m_readCharacteristic);
 }
 
+void BLEInterface::waitForWrite() {
+    QEventLoop loop;
+    connect(m_service, SIGNAL(characteristicWritten(QLowEnergyCharacteristic,QByteArray)),
+            &loop, SLOT(quit()));
+    loop.exec();
+}
+
 void BLEInterface::write(const QByteArray &data)
 {
     qDebug() << "BLEInterface::write: " << data;
