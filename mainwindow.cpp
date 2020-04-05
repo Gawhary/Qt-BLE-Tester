@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     m_bleInterface = new BLEInterface(this);
-    m_bleInterface->scanDevices();
+
     connect(m_bleInterface, &BLEInterface::dataReceived,
             this, &MainWindow::dataReceived);
     connect(m_bleInterface, &BLEInterface::devicesNamesChanged,
@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
             [this](QString info, bool){
         this->statusBar()->showMessage(info);
     });
+
+    m_bleInterface->scanDevices();
 }
 
 MainWindow::~MainWindow()
