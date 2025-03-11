@@ -1,6 +1,9 @@
 #include "bleinterface.h"
 #include <QDebug>
 #include <QEventLoop>
+#include <QtBluetooth/QLowEnergyCharacteristic>
+#include <QBluetoothUuid>
+
 
 DeviceInfo::DeviceInfo(const QBluetoothDeviceInfo &info):
     QObject(), m_device(info)
@@ -140,7 +143,7 @@ void BLEInterface::connectCurrentDevice()
         m_control = 0;
 
     }
-    m_control = new QLowEnergyController(m_devices[ m_currentDevice]->getDevice(), this);
+    m_control = QLowEnergyController::createCentral(m_devices[ m_currentDevice]->getDevice(), this);
     connect(m_control, SIGNAL(serviceDiscovered(QBluetoothUuid)),
             this, SLOT(onServiceDiscovered(QBluetoothUuid)));
     connect(m_control, SIGNAL(discoveryFinished()),
@@ -259,7 +262,7 @@ void BLEInterface::update_currentService(int indx)
     connect(m_service, SIGNAL(error(QLowEnergyService::ServiceError)),
             this, SLOT(serviceError(QLowEnergyService::ServiceError)));
 
-    if(m_service->state() == QLowEnergyService::DiscoveryRequired) {
+    if(m_service->state() == QLowEnergyService::RemoteService) {
         emit statusInfoChanged("Connecting to service...", true);
         m_service->discoverDetails();
     }
@@ -295,8 +298,9 @@ void BLEInterface::searchCharacteristic(){
                         m_readTimer->start(READ_INTERVAL_MS);
                     }
                 }
+
                 m_notificationDesc = c.descriptor(
-                            QBluetoothUuid::ClientCharacteristicConfiguration);
+                            QBluetoothUuid::DescriptorType::ClientCharacteristicConfiguration);
                 if (m_notificationDesc.isValid()) {
                     m_service->writeDescriptor(m_notificationDesc, QByteArray::fromHex("0100"));
                 }
@@ -309,7 +313,7 @@ void BLEInterface::searchCharacteristic(){
 void BLEInterface::onServiceStateChanged(QLowEnergyService::ServiceState s)
 {
     qDebug() << "serviceStateChanged, state: " << s;
-    if (s == QLowEnergyService::ServiceDiscovered) {
+    if (s == QLowEnergyService::RemoteServiceDiscovered) {
         searchCharacteristic();
     }
 }
